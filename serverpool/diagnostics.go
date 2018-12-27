@@ -19,6 +19,7 @@ type DiagnosticsServer struct {
 }
 
 func (s *DiagnosticsServer) Ready(v bool) {
+	s.logger.Log(logger.DEBUG, "ready", v)
 	s.ready.Store(v)
 }
 
