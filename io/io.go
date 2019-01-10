@@ -25,9 +25,12 @@ func CreateDirectoryIfNotExist(dir string) error {
 // DownloadFile downloads a file from the provided url and will save it under the
 // provided name in the destination directory
 func DownloadFile(destDir, filename, url string) error {
-	// Create the directory
-	if err := CreateDirectoryIfNotExist(destDir); err != nil {
-		return fmt.Errorf("couldn't create directory: %v", err)
+	// Make sure that the directory exists unless the current directory shortcut has been
+	// given as an argument
+	if destDir != "." && destDir != "./" {
+		if err := CreateDirectoryIfNotExist(destDir); err != nil {
+			return fmt.Errorf("couldn't create directory: %v", err)
+		}
 	}
 
 	// Create the destination file
@@ -56,9 +59,12 @@ func DownloadFile(destDir, filename, url string) error {
 
 // Unzip extracts the files of a .zip archive to the provided destination directory
 func Unzip(destDir, archive string) error {
-	// Make sure that the destination directory exists
-	if err := CreateDirectoryIfNotExist(destDir); err != nil {
-		return fmt.Errorf("couldn't create directory: %v", err)
+	// Make sure that the directory exists unless the current directory shortcut has been
+	// given as an argument
+	if destDir != "." && destDir != "./" {
+		if err := CreateDirectoryIfNotExist(destDir); err != nil {
+			return fmt.Errorf("couldn't create directory: %v", err)
+		}
 	}
 
 	// Open the archive
