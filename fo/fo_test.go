@@ -22,7 +22,7 @@ func TestCreateDirectoryIfNotExist(t *testing.T) {
 func TestUnzip(t *testing.T) {
 	url := "https://www.sample-videos.com/zip/10mb.zip"
 
-	if err := DownloadFile("/tmp", "test.zip", url); err != nil {
+	if err := DownloadFile("/tmp", url); err != nil {
 		t.Fatalf("expected to pass, but got %v", err)
 	}
 	defer os.Remove("/tmp/test/zip")
