@@ -18,7 +18,7 @@ func SplitPathAndFile(p string) (string, string, error) {
 	sep := "/"
 	if strings.Contains(p, "://") {
 		parts := strings.Split(p, "://")
-		p = strings.Join(parts[2:], "/")
+		p = strings.Join(parts[1:], "/")
 	} else if strings.Contains(p, "\\") {
 		sep = "\\"
 	} else if !strings.Contains(p, "/") {
@@ -27,7 +27,14 @@ func SplitPathAndFile(p string) (string, string, error) {
 
 	parts := strings.Split(p, sep)
 	l := len(parts)
-	return path.Join(append([]string{sep}, parts[:l-2]...)...), parts[l-1], nil
+	if l <= 1 {
+		return "", "", fmt.Errorf("couldn't split %v", p)
+	}
+
+	dir := path.Join(append([]string{sep}, parts[:l-2]...)...)
+	filename := parts[l-1]
+
+	return dir, filename, nil
 }
 
 // CreateDirectoryIfNotExist creates a directory or path of directories
