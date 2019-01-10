@@ -52,43 +52,43 @@ func CreateDirectoryIfNotExist(dir string) error {
 
 // DownloadFile downloads a file from the provided url and will save it under the
 // provided name in the destination directory
-func DownloadFile(destDir, url string) error {
+func DownloadFile(destDir, url string) (string, error) {
 	// Make sure that the directory exists unless the current directory shortcut has been
 	// given as an argument
 	if destDir != "." && destDir != "./" {
 		if err := CreateDirectoryIfNotExist(destDir); err != nil {
-			return fmt.Errorf("couldn't create directory: %v", err)
+			return "", fmt.Errorf("couldn't create directory: %v", err)
 		}
 	}
 
 	// Get the filename from the URL
 	_, filename, err := SplitPathAndFile(url)
 	if err != nil {
-		return fmt.Errorf("couldn't get filename: %v", err)
+		return "", fmt.Errorf("couldn't get filename: %v", err)
 	}
 
 	// Create the destination file
 	fullPath := path.Join(destDir, filename)
 	dest, err := os.Create(fullPath)
 	if err != nil {
-		return fmt.Errorf("couldn't create destination file: %v", err)
+		return "", fmt.Errorf("couldn't create destination file: %v", err)
 	}
 	defer dest.Close()
 
 	// Download the data
 	resp, err := http.Get(url)
 	if err != nil {
-		return fmt.Errorf("download error: %v", err)
+		return "", fmt.Errorf("download error: %v", err)
 	}
 	defer resp.Body.Close()
 
 	// Write the body into the file
 	_, err = io.Copy(dest, resp.Body)
 	if err != nil {
-		return fmt.Errorf("couldn't write content: %v", err)
+		return "", fmt.Errorf("couldn't write content: %v", err)
 	}
 
-	return nil
+	return fullPath, nil
 }
 
 // Unzip extracts the files of a .zip archive to the provided destination directory
