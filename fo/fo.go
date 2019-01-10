@@ -1,4 +1,4 @@
-package io
+package fo
 
 import (
 	"archive/zip"
@@ -7,7 +7,28 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"strings"
 )
+
+// SplitPathAndFile takes a full path (windows and unix) or an URL splits the path and file
+// The last element is considered to be the file and is returned as such
+// When an URL is provided the prodocol indicator will be removed and the domain name will become a part of the path
+// So http://example.com/files/file.zip will return example.com/files as the path
+func SplitPathAndFile(p string) (string, string, error) {
+	sep := "/"
+	if strings.Contains(p, "://") {
+		parts := strings.Split(p, "://")
+		p = strings.Join(parts[2:], "/")
+	} else if strings.Contains(p, "\\") {
+		sep = "\\"
+	} else if !strings.Contains(p, "/") {
+		return "", "", fmt.Errorf("invalid path")
+	}
+
+	parts := strings.Split(p, sep)
+	l := len(parts)
+	return path.Join(append([]string{sep}, parts[:l-2]...)...), parts[l-1], nil
+}
 
 // CreateDirectoryIfNotExist creates a directory or path of directories
 // if it doesn't exist
