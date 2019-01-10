@@ -45,13 +45,19 @@ func CreateDirectoryIfNotExist(dir string) error {
 
 // DownloadFile downloads a file from the provided url and will save it under the
 // provided name in the destination directory
-func DownloadFile(destDir, filename, url string) error {
+func DownloadFile(destDir, url string) error {
 	// Make sure that the directory exists unless the current directory shortcut has been
 	// given as an argument
 	if destDir != "." && destDir != "./" {
 		if err := CreateDirectoryIfNotExist(destDir); err != nil {
 			return fmt.Errorf("couldn't create directory: %v", err)
 		}
+	}
+
+	// Get the filename from the URL
+	_, filename, err := SplitPathAndFile(url)
+	if err != nil {
+		return fmt.Errorf("couldn't get filename: %v", err)
 	}
 
 	// Create the destination file
