@@ -4,9 +4,9 @@ import (
 	"os"
 	"testing"
 
-	th "github.com/arjanvaleersel/kit/cfg/testhelpers"
 	"github.com/arjanvaneersel/kit/cfg"
 	env "github.com/arjanvaneersel/kit/cfg/providers/env"
+	th "github.com/arjanvaneersel/kit/cfg/testhelpers"
 )
 
 func TestEnvProvider(t *testing.T) {
